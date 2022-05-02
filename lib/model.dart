@@ -34,12 +34,14 @@ class Programador extends Pessoa{
 }
 
 void mainEntidades(){
-  Pessoa pessoa = new Programador();
+  bool isBoss = true;
+
+  Programador pessoa = new Programador();
   pessoa.nome = "José";
   pessoa.CPF = "123.456.789-09";
   pessoa.nascimento = DateTime(1990, 10, 10);
   pessoa.sexo = Sexo.MASCULINO;
-  //pessoa.salario = 10000.0;
+  pessoa.salario = isBoss ? 20000.0 : 10000.0;
 
   print(pessoa.toString());
 }
