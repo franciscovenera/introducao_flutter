@@ -20,38 +20,61 @@ class NotaFiscal {
   NotaFiscal({this.numero, this.emissao, this.cliente, this.enderecoEntrega});
 
   double calcularValorTotal() {
-    double total = 0.0;
-    for (ItemNF item in listaItens) {
-      total += item.getValorTotal();
-    }
-    return total;
+    return listaItens.map((e) => e.getValorTotal()).reduce((a, b) => a + b);
+    // double total = 0.0;
+    // for (ItemNF item in listaItens) {
+    //   total += item.getValorTotal();
+    // }
+    // return total;
   }
 
-  //double calcularTotalDescontos()
-  //double calcularTotalAcrescimos()
-
-  ItemNF? getProdutoMaisBarato() {
-    ItemNF? itemMaisBarato;
-    for (ItemNF item in listaItens) {
-      if (itemMaisBarato == null) {
-        itemMaisBarato = item;
-      } else if (item.getValorTotal() < itemMaisBarato.getValorTotal()) {
-        itemMaisBarato = item;
-      }
-    }
-    return itemMaisBarato;
+  double calcularTotalDescontos(){
+    return listaItens.map((e) => e.desconto).reduce((a, b) => a + b);
+    // double totalDesc = 0.0;
+    // for (ItemNF item in listaItens){
+    //   totalDesc += item.desconto;
+    // }
+    // return totalDesc;
   }
 
-  ItemNF? getProdutoMaisCaro() {
-    ItemNF? itemMaisCaro;
-    for (ItemNF item in listaItens) {
-      if (itemMaisCaro == null) {
-        itemMaisCaro = item;
-      } else if (item.getValorTotal() > itemMaisCaro.getValorTotal()) {
-        itemMaisCaro = item;
-      }
+  double calcularTotalAcrescimos(){
+    double totalAcrescimo = 0.0;
+    for (ItemNF item in listaItens){
+      totalAcrescimo += item.acrescimo;
     }
-    return itemMaisCaro;
+    return totalAcrescimo;
+  }
+
+  double? getProdutoMaisBarato() {
+    return listaItens.map((item) => item.valor).reduce((a, b) => a < b ? a : b);
+
+    // ItemNF? itemMaisBarato;
+    // for (ItemNF item in listaItens) {
+    //   if (itemMaisBarato == null) {
+    //     itemMaisBarato = item;
+    //   } else if (item.getValorTotal() < itemMaisBarato.getValorTotal()) {
+    //     itemMaisBarato = item;
+    //   }
+    // }
+    // return itemMaisBarato;
+  }
+
+  double getProdutoMaisCaro() {
+    return listaItens.map((item) => item.valor).reduce((a, b) => a > b ? a : b);
+
+    // ItemNF? itemMaisCaro;
+    // for (ItemNF item in listaItens) {
+    //   if (itemMaisCaro == null) {
+    //     itemMaisCaro = item;
+    //   } else if (item.getValorTotal() > itemMaisCaro.getValorTotal()) {
+    //     itemMaisCaro = item;
+    //   }
+    // }
+    // return itemMaisCaro;
+  }
+
+  Iterable<ItemNF>itensComDesconto(){
+    return listaItens.map((item) => item).where((item) => item.desconto > 0);
   }
 
   ItemNF addItem(
@@ -67,6 +90,14 @@ class NotaFiscal {
         acrescimo: acrescimo);
     listaItens.add(item);
     return item;
+  }
+
+  String getStrItens() {
+    return listaItens.map((i) => "${i.numSeq}: ${i.produto}").join(", ");
+  }
+
+  bool possuiDesconto(){
+    return listaItens.map((item) => item.desconto).any((a) => a > 0);
   }
 }
 
@@ -103,5 +134,9 @@ void mainNotaFiscal() {
   nota.addItem(produto: 'Cadeira', valor: 2000, desconto: 10.0);
   nota.addItem(produto: 'Teclado', valor: 500, acrescimo: 50.0);
   print('Valor total da NF = ${nota.calcularValorTotal()}');
-  print('produto mais barato = ${nota.getProdutoMaisBarato()}');
+  //print('produto mais barato = ${nota.getProdutoMaisBarato()}');
+  print('Total desconto = ${nota.calcularTotalDescontos()}');
+  print('Total acrescimo= ${nota.calcularTotalAcrescimos()}');
+  print(nota.getStrItens());
+  print(nota.getProdutoMaisCaro());
 }
