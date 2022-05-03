@@ -46,7 +46,7 @@ class NotaFiscal {
   }
 
   double? getProdutoMaisBarato() {
-    return listaItens.map((item) => item.valor).reduce((a, b) => a < b ? a : b);
+    return listaItens.map((item) => item.getValorTotal()).reduce((a, b) => a < b ? a : b);
 
     // ItemNF? itemMaisBarato;
     // for (ItemNF item in listaItens) {
@@ -60,7 +60,7 @@ class NotaFiscal {
   }
 
   double getProdutoMaisCaro() {
-    return listaItens.map((item) => item.valor).reduce((a, b) => a > b ? a : b);
+    return listaItens.map((item) => item.getValorTotal()).reduce((a, b) => a > b ? a : b);
 
     // ItemNF? itemMaisCaro;
     // for (ItemNF item in listaItens) {
